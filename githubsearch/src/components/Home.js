@@ -1,14 +1,16 @@
 import { Component } from 'react';
 import SearchBox from './Search/SearchBox';
 import SearchResults from './Search/SearchResults';
+import axios from 'axios';
 
 class Home extends Component{
     state = {
         SearchQuery: "",
-        SearchResults : "this is it"
+        SearchResults : []
     }
 
     getSearchQuery = (q) => {
+        console.log("the serach query changed")
         this.setState({
             SearchQuery : q
         })
@@ -16,7 +18,25 @@ class Home extends Component{
     }
 
     getSearchResults(){
-        console.log("getting serach results from github server")
+        var username = this.state.SearchQuery;
+        axios.get(`https://api.github.com/users/${username}`)
+        .then(res => {
+            console.log("Serach results : ",res.data)
+            this.setState({
+                SearchResults: [res.data]
+            })
+        })
+        .catch(error=>{
+            if(error.response.status === "404"){
+                this.setState({
+                    SearchResults: []
+                })    
+            } else{
+                this.setState({
+                    SearchResults: []
+                })    
+            }
+        })
     }
 
     render(){

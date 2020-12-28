@@ -6,7 +6,7 @@ import axios from 'axios';
 class Home extends Component{
     state = {
         SearchQuery: "",
-        SearchResults : []
+        SearchResults : [],
     }
 
     getSearchQuery = (q) => {
@@ -40,7 +40,7 @@ class Home extends Component{
     }
 
     render(){
-        return (
+          return (
             <div className='todo-app container'>
                 <SearchBox getSearchQuery={this.getSearchQuery}/>
                 <SearchResults results={this.state.SearchResults} />

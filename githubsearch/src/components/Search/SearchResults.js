@@ -1,8 +1,17 @@
 import { Component } from 'react';
+import Modal from '../modal';
 
 class SearchResults extends Component{
     state = {
-        content: this.props.results
+        content: this.props.results,
+        modalVisibility : false,
+        modalMsg: ''
+    }
+
+    closeModal = ()=> {
+        this.setState({
+            modalVisibility : false
+        })
     }
 
     saveUser = (user) => {
@@ -19,22 +28,32 @@ class SearchResults extends Component{
             });
 
             if(!isExist){
-                alert("user Saved Successfully!")
+                this.setState({
+                    modalVisibility : true,
+                    modalMsg : "user Saved Successfully !"
+                })        
                 retrievedObjectArray.push(user);
                 localStorage.setItem('urlsOfSavedUser', JSON.stringify(retrievedObjectArray));
             }
             else{
-                alert("user Already Saved !")
-                console.log("already exists")
+                this.setState({
+                    modalVisibility : true,
+                    modalMsg : "user Already Saved !"
+                })
+                 console.log("already exists")
             }
         } else{
+            this.setState({
+                modalVisibility : true,
+                modalMsg : "user Saved Successfully !"
+            })        
             let users = [user];
             localStorage.setItem('urlsOfSavedUser', JSON.stringify(users));
-            alert("user Saved Successfully!")
         }
     }
 
     render(){
+        const modal = this.state.modalVisibility ? <Modal msg={this.state.modalMsg} closeModal={this.closeModal} visibility='true'/> : null
         const content = this.props.results
         const resultsList = content.length ? 
         (
@@ -64,7 +83,7 @@ class SearchResults extends Component{
                     
                     <div className="card-action">
                         <div className='right'>
-                        <a href="#" onClick={() => this.saveUser(user)}>Save User</a>
+                        <a onClick={() => this.saveUser(user)}>Save User</a>
                         <a target='_blank' href={user.html_url}>Visit Profile on Github</a>
                         </div>
                         <br/>
@@ -79,8 +98,9 @@ class SearchResults extends Component{
 
         return(
             <div>
+                {modal}
                 <div className="row">
-                    <div className="col s12 m6">
+                    <div className="col s12 m12">
                         {resultsList}
                     </div>
                 </div>

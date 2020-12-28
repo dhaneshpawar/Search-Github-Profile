@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import Modal from './modal';
 
 class UserList extends Component{
     componentDidMount(){
@@ -6,7 +7,15 @@ class UserList extends Component{
     }
 
     state = {
-        content: []
+        content: [],
+        modalVisibility : false,
+        modalMsg: ''
+    }
+
+    closeModal = ()=> {
+        this.setState({
+            modalVisibility : false
+        })
     }
 
     getUsers = ()=>{
@@ -35,12 +44,16 @@ class UserList extends Component{
             localStorage.setItem('urlsOfSavedUser', JSON.stringify(isExist));
             this.setState({
                 content : isExist
-            })              
-            alert("User deleted succesfully !")
+            })
+            this.setState({
+                modalVisibility : true,
+                modalMsg : "User deleted succesfully !"
+            })        
         }
     }
 
     render(){
+        const modal = this.state.modalVisibility ? <Modal msg={this.state.modalMsg} closeModal={this.closeModal} visibility='true'/> : null
         const content = this.state.content
         const resultsList = content.length ? 
         (
@@ -85,8 +98,9 @@ class UserList extends Component{
 
         return(
             <div>
+                {modal}
                 <div className="row">
-                    <div className="col s12 m6">
+                    <div className="col s12 m6 offset-m3">
                         {resultsList}
                     </div>
                 </div>
